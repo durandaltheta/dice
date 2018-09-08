@@ -59,24 +59,31 @@ QString dice::interpret_text(QString text) {
 
             std::vector<int> diceRolls = eval_dice(text);
 
-            for(int i = 0; i < diceRolls.size(); i++)
+            for(unsigned int i = 0; i < diceRolls.size(); i++)
             {
                 sum += diceRolls[i];
             }
 
-            retval += "\n"+QString::number(sum+mod);
+            retval += "\n"+QString::number(sum);
 
             retval += "=";
-            for (int d = 0; d < diceRolls.size(); d++)
+            for (unsigned int d = 0; d < diceRolls.size(); d++)
             {
                 if(d!=0)retval += "+";
-                retval += QString::number(diceRolls[d]+mod);
+                retval += QString::number(diceRolls[d]);
+            }
+            if(mod > 0) {
+                sum += mod;
+                retval += "+" + QString::number(mod);
+            } else if(mod < 0) {
+                sum -= mod;
+                retval += QString::number(mod);
             }
 
             if(repeat > 1)
             {
-                totalSum += sum+mod;
-                totalSumList.push_back(sum+mod);
+                totalSum += sum;
+                totalSumList.push_back(sum);
             }
         }
 
