@@ -47,26 +47,49 @@ QString dice::interpret_text(QString text) {
             text = text.mid(0,mod_pos);
         }
 
-        std::vector<int> diceRolls = eval_dice(text);
+
         int sum = 0;
-        for(int i = 0; i < diceRolls.size(); i++)
-        {
-            sum += diceRolls[i];
-        }
+        std::vector<int> totalSumList;
+        int totalSum = 0;
 
-        retval = QString::number(sum+mod);
-        for(int c = 1; c < repeat; c++) {
+        //retval = QString::number(sum+mod);
+
+
+        for(int c = 0; c < repeat; c++) {
+
+            std::vector<int> diceRolls = eval_dice(text);
+
+            for(int i = 0; i < diceRolls.size(); i++)
+            {
+                sum += diceRolls[i];
+            }
+
             retval += "\n"+QString::number(sum+mod);
+
+            retval += "=";
+            for (int d = 0; d < diceRolls.size(); d++)
+            {
+                if(d!=0)retval += "+";
+                retval += QString::number(diceRolls[d]+mod);
+            }
+
+            if(repeat > 1)
+            {
+                totalSum += sum+mod;
+                totalSumList.push_back(sum+mod);
+            }
         }
 
-
-        retval += "=";
-        for (int d = 0; d < diceRolls.size(); d++)
+        if (repeat > 1)
         {
-            if(d!=0)retval += "+";
-            retval += QString::number(diceRolls[d]);
-        }
+            retval+= "\n--\n"+QString::number(totalSum)+"=";
 
+            for (int e = 0; e < totalSumList.size(); e++)
+            {
+                if(e!=0)retval += "+";
+                retval += QString::number(totalSumList[e]+mod);
+            }
+        }
 
     } else {
         retval = "?";
