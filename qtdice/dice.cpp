@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <time.h>
+#include <vector>
 #include "dice.h"
 
 dice::dice(QObject *parent) : QObject(parent) {
@@ -46,17 +47,34 @@ QString dice::interpret_text(QString text) {
             text = text.mid(0,mod_pos);
         }
 
-        retval = QString::number(eval_dice(text)+mod);
-        for(int c = 1; c < repeat; c++) {
-            retval += "\n"+QString::number(eval_dice(text)+mod);
+        std::vector<int> diceRolls = eval_dice(text);
+        int sum = 0;
+        for(int i = 0; i < diceRolls.size(); i++)
+        {
+            sum += diceRolls[i];
         }
+
+        retval = QString::number(sum+mod);
+        for(int c = 1; c < repeat; c++) {
+            retval += "\n"+QString::number(sum+mod);
+        }
+
+
+        retval += "=";
+        for (int d = 0; d < diceRolls.size(); d++)
+        {
+            if(d!=0)retval += "+";
+            retval += QString::number(diceRolls[d]);
+        }
+
+
     } else {
         retval = "?";
     }
     return retval;
 }
 
-int dice::eval_dice(QString text) {
+std::vector<int> dice::eval_dice(QString text) {
     int dpos = text.indexOf("d");
     int a = 1;
     int b = text.mid(dpos+1,text.length()-1).toInt();
@@ -65,10 +83,13 @@ int dice::eval_dice(QString text) {
         a = text.mid(0,dpos).toInt();
     }
 
-    int sum = 0;
+    //int sum = 0;
+    std::vector<int> diceRolls;
+
     for(int c = 0; c < a; c++) {
-        sum += rand() % b + 1;
+        diceRolls.push_back((rand() % b + 1));
+        //sum += rand() % b + 1;
     }
 
-    return sum;
+    return diceRolls;
 }

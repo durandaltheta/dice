@@ -12,7 +12,7 @@ public:
     Q_INVOKABLE QString interpret_text(QString text);
 
 private:
-    int eval_dice(QString text);
+    std::vector<int> eval_dice(QString text);
 
     //members
     QString m_dice_regex_pattern;
