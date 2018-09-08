@@ -3,20 +3,17 @@ wccc=x86_64-w64-mingw32-g++
 flags=-Wall -Wextra -Werror
 
 ifeq ($(OS),Windows_NT)
-win-only: win
+name=dice.exe
 else
-all: lin win-cross
+name=dice
 endif
 
 
-lin: dice.cpp
-	$(cc) $(flags) dice.cpp -o dice
-
-win: dice.cpp
-	$(cc) $(flags) dice.cpp -o dice.exe
+default: dice.cpp
+	$(cc) $(flags) dice.cpp -o $(name)
 
 win-cross: dice.cpp $(wildcard not-win)
-	$(wccc) $(flags) dice.cpp -o dice.exe
+	$(wccc) $(flags) dice.cpp -o $(name).exe
 
 clean:
-	rm dice dice.exe
+	rm $(name)
