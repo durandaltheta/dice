@@ -9,10 +9,14 @@ Window {
 
     property string dice_text: "";
     function rollDice(text) {
-        dice_text += "\n\n"
-        dice_text += "----------\n"
-        dice_text += text+"\n"
-        dice_text += Dice.interpret_text(text)
+        if(text == "clear") {
+            dice_text = ""
+        } else {
+            dice_text += "\n\n"
+            dice_text += "----------\n"
+            dice_text += text+"\n"
+            dice_text += Dice.interpret_text(text)
+        }
     }
 
     Rectangle {
@@ -49,11 +53,11 @@ Window {
                 verticalAlignment: TextInput.AlignVCenter
                 horizontalAlignment: TextInput.AlignHCenter
                 color: "black"
-                property string example_text: "#d#+|-#r#"
+                property string example_text: "#d#+|-#r# or clear (to reset results)"
                 //font.bold: true
                 font.family: "Dyuthi"
                 font.pixelSize: 25
-                validator: RegExpValidator { regExp: /[0-9]*d([2468]|10|12|20|100)((\+[0-9]+)|(\-[0-9]+))?(r[0-9]+)?/ }
+                validator: RegExpValidator { regExp: /(clear)|([0-9]*d([2468]|10|12|20|100)((\+[0-9]+)|(\-[0-9]+))?(r[0-9]+)?)/ }
 
                 onActiveFocusChanged: {
                     if(activeFocus == true) {
